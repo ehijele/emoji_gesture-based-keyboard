@@ -5,10 +5,22 @@
 	<meta charset="UTF-8">
 	<title>Gesture-Based Emoji Input</title>
 	<style>
+		body,
+		html {
+			overscroll-behavior: none;
+			/* Prevent pull-to-refresh */
+			touch-action: none;
+			/* Disable touch actions */
+		}
 		body {
 			font-family: Arial, sans-serif;
 			text-align: center;
 			margin: 20px;
+		}
+
+		.gesture-area {
+			touch-action: none;
+			/* Specifically disable touch actions in the gesture area */
 		}
 
 		.gesture-area {
@@ -43,7 +55,6 @@
 	const gestureArea = document.getElementById("gestureArea");
 	const emojiOutput = document.getElementById("emojiOutput");
 
-	// Gesture Mapping: Map specific gestures to emojis
 	const gestureMap = {
 		"L-shape": "👍",
 		"circle": "🔁",
@@ -54,27 +65,46 @@
 	let path = [];
 	let isDrawing = false;
 
+	// Prevent pull-to-refresh on mobile
+	gestureArea.addEventListener("touchstart", preventPullToRefresh);
+	gestureArea.addEventListener("touchmove", preventPullToRefresh);
+
+	function preventPullToRefresh(e) {
+		e.preventDefault();
+	}
+
 	gestureArea.addEventListener("mousedown", startGesture);
+	gestureArea.addEventListener("touchstart", startGesture);
 	gestureArea.addEventListener("mousemove", trackGesture);
+	gestureArea.addEventListener("touchmove", trackGesture);
 	gestureArea.addEventListener("mouseup", endGesture);
 	gestureArea.addEventListener("mouseleave", endGesture);
+	gestureArea.addEventListener("touchend", endGesture);
 
 	function startGesture(e) {
 		isDrawing = true;
-		path = [{ x: e.offsetX, y: e.offsetY }];
+		path = [{ x: getTouchX(e), y: getTouchY(e) }];
 	}
 
 	function trackGesture(e) {
 		if (!isDrawing) return;
-		path.push({ x: e.offsetX, y: e.offsetY });
+		path.push({ x: getTouchX(e), y: getTouchY(e) });
 	}
 
 	function endGesture() {
 		isDrawing = false;
 		const gestureType = recognizeGesture(path);
-		const emoji = gestureMap[gestureType] || "?";  // Default to question mark if not recognized
+		const emoji = gestureMap[gestureType] || "❓";
 		emojiOutput.value += emoji;
 		path = [];
+	}
+
+	function getTouchX(e) {
+		return e.touches ? e.touches[0].clientX : e.clientX;
+	}
+
+	function getTouchY(e) {
+		return e.touches ? e.touches[0].clientY : e.clientY;
 	}
 
 	function recognizeGesture(path) {
@@ -83,7 +113,6 @@
 		const dx = Math.abs(path[path.length - 1].x - path[0].x);
 		const dy = Math.abs(path[path.length - 1].y - path[0].y);
 
-		// Simple Gesture Detection Logic
 		if (dx > 50 && dy < 20) return "straight-line";
 		if (dx < 20 && dy > 50) return "L-shape";
 		if (Math.abs(dx - dy) < 20) return "circle";
