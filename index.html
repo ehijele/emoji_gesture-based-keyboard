@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Gesture-Based Emoji Input</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin: 20px;
+		}
+
+		.gesture-area {
+			width: 300px;
+			height: 300px;
+			border: 2px dashed #007bff;
+			margin: 20px auto;
+			line-height: 300px;
+			color: #888;
+			font-size: 20px;
+			position: relative;
+		}
+
+		#emojiOutput {
+			width: 80%;
+			margin: 10px auto;
+			padding: 8px;
+			font-size: 20px;
+			border-radius: 8px;
+			display: block;
+		}
+	</style>
+</head>
+
+<body>
+	<h2>Gesture-Based Emoji Input System</h2>
+	<div class="gesture-area" id="gestureArea">Draw Gesture Here</div>
+	<textarea id="emojiOutput" placeholder="Emoji will appear here..." rows="3"></textarea>
+	<script src="script.js"></script>
+</body>
+<script>
+	const gestureArea = document.getElementById("gestureArea");
+	const emojiOutput = document.getElementById("emojiOutput");
+
+	// Gesture Mapping: Map specific gestures to emojis
+	const gestureMap = {
+		"L-shape": "👍",
+		"circle": "🔁",
+		"zigzag": "😂",
+		"straight-line": "➡️"
+	};
+
+	let path = [];
+	let isDrawing = false;
+
+	gestureArea.addEventListener("mousedown", startGesture);
+	gestureArea.addEventListener("mousemove", trackGesture);
+	gestureArea.addEventListener("mouseup", endGesture);
+	gestureArea.addEventListener("mouseleave", endGesture);
+
+	function startGesture(e) {
+		isDrawing = true;
+		path = [{ x: e.offsetX, y: e.offsetY }];
+	}
+
+	function trackGesture(e) {
+		if (!isDrawing) return;
+		path.push({ x: e.offsetX, y: e.offsetY });
+	}
+
+	function endGesture() {
+		isDrawing = false;
+		const gestureType = recognizeGesture(path);
+		const emoji = gestureMap[gestureType] || "?";  // Default to question mark if not recognized
+		emojiOutput.value += emoji;
+		path = [];
+	}
+
+	function recognizeGesture(path) {
+		if (path.length < 5) return "straight-line";
+
+		const dx = Math.abs(path[path.length - 1].x - path[0].x);
+		const dy = Math.abs(path[path.length - 1].y - path[0].y);
+
+		// Simple Gesture Detection Logic
+		if (dx > 50 && dy < 20) return "straight-line";
+		if (dx < 20 && dy > 50) return "L-shape";
+		if (Math.abs(dx - dy) < 20) return "circle";
+		if (dx > 20 && dy > 20) return "zigzag";
+
+		return "unknown";
+	}
+
+</script>
+
+</html>
