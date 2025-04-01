@@ -13,8 +13,8 @@
     }
 
     .whatsapp-screen {
-      width: 470px;
-      height: 800px;
+      width: 390px;
+      height: 844px;
       margin: 20px auto;
       border: 1px solid #ccc;
       border-radius: 20px;
@@ -32,28 +32,56 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .chat-bubble {
-      background-color: #dcf8c6;
-      padding: 10px 15px;
+      padding: 10px 12px 18px;
       border-radius: 10px;
       max-width: 70%;
-      align-self: flex-start;
       margin: 5px 0;
       white-space: pre-wrap;
+      position: relative;
+      color: white;
+      word-wrap: break-word;
+    }
+
+    .sent {
+      align-self: flex-end;
+      background-color: #075e54;
+    }
+
+    .message-content {
+      display: block;
+      padding-right: 50px; /* space for meta */
+      line-height: 1.4;
+    }
+
+    .message-meta {
+      position: absolute;
+      bottom: 4px;
+      right: 10px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #a9c8d0;
     }
 
     .keyboard-area {
       background-color: #f0f0f0;
       padding: 10px;
       border-top: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .preview-container {
       display: flex;
       position: relative;
       align-items: center;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .preview-input {
@@ -103,27 +131,11 @@
       color: #888;
     }
 
-    .dot {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background-color: #333;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: fadeout 1s ease forwards;
-    }
-
-    @keyframes fadeout {
-      to {
-        opacity: 0;
-        transform: scale(2);
-      }
-    }
-
     .keyboard-row {
       display: flex;
       justify-content: center;
       margin-bottom: 5px;
+      width: 100%;
     }
 
     .key {
@@ -156,6 +168,23 @@
     .hidden {
       display: none;
     }
+
+    .dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background-color: #333;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fadeout 1s ease forwards;
+    }
+
+    @keyframes fadeout {
+      to {
+        opacity: 0;
+        transform: scale(2);
+      }
+    }
   </style>
 </head>
 <body>
@@ -164,7 +193,7 @@
 
     <div class="keyboard-area">
       <div class="preview-container">
-        <textarea class="preview-input" id="previewInput" placeholder="Type a message..."></textarea>
+        <textarea class="preview-input" id="previewInput" placeholder="Type a message ..."></textarea>
         <div class="send-btn" id="sendButton">➤</div>
       </div>
 
@@ -189,109 +218,27 @@
           <div class="key return" id="returnKey">⏎</div>
         </div>
       </div>
-
-      <div id="keyboard-symbols" class="hidden">
-        <div class="keyboard-row">
-          <div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div><div class="key">5</div><div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key">0</div>
-        </div>
-        <div class="keyboard-row">
-          <div class="key">-</div><div class="key">/</div><div class="key">:</div><div class="key">;</div><div class="key">(</div><div class="key">)</div><div class="key">$</div><div class="key">&</div><div class="key">@</div><div class="key">"</div>
-        </div>
-        <div class="keyboard-row">
-          <div class="key">+</div><div class="key">=</div><div class="key">.</div><div class="key">,</div><div class="key">?</div><div class="key">!</div><div class="key">'</div><div class="key" id="backspace2">⌫</div>
-        </div>
-        <div class="keyboard-row">
-          <div class="key" id="toggle-abc">ABC</div>
-          <div class="key">😀</div>
-          <div class="key space" id="spacebar2">Space</div>
-          <div class="key return" id="returnKey2">⏎</div>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
     const previewInput = document.getElementById('previewInput');
     const chatArea = document.getElementById('chatArea');
+    const sendButton = document.getElementById('sendButton');
     const gestureArea = document.getElementById('gestureArea');
     const alphabetKeyboard = document.getElementById('keyboard-alphabet');
-    const symbolKeyboard = document.getElementById('keyboard-symbols');
-    const sendButton = document.getElementById('sendButton');
-
-    let isSwiping = false;
-    let justSwiped = false;
-
-    document.querySelectorAll('.key').forEach(key => {
-      key.addEventListener('click', () => {
-        if (justSwiped) return;
-
-        const keyText = key.innerText;
-        if (key.id === 'backspace' || key.id === 'backspace2') {
-          previewInput.value = previewInput.value.slice(0, -1);
-        } else if (key.id === 'spacebar' || key.id === 'spacebar2') {
-          previewInput.value += ' ';
-        } else if (key.id === 'returnKey' || key.id === 'returnKey2') {
-          const cursorPos = previewInput.selectionStart;
-          const value = previewInput.value;
-          previewInput.value = value.substring(0, cursorPos) + "\n" + value.substring(cursorPos);
-          previewInput.focus();
-          previewInput.selectionEnd = cursorPos + 1;
-        } else if (key.id === 'toggle-symbols') {
-          alphabetKeyboard.classList.add('hidden');
-          symbolKeyboard.classList.remove('hidden');
-        } else if (key.id === 'toggle-abc') {
-          symbolKeyboard.classList.add('hidden');
-          alphabetKeyboard.classList.remove('hidden');
-        } else if (!key.id) {
-          previewInput.value += keyText;
-        }
-      });
-    });
 
     sendButton.addEventListener('click', () => {
       const msg = previewInput.value.trim();
       if (msg) {
         const newBubble = document.createElement('div');
-        newBubble.className = 'chat-bubble';
-        newBubble.innerText = msg;
+        newBubble.className = 'chat-bubble sent';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        newBubble.innerHTML = `<span class="message-content">${msg}</span><div class="message-meta">${time} ✔✔</div>`;
         chatArea.appendChild(newBubble);
         previewInput.value = '';
         chatArea.scrollTop = chatArea.scrollHeight;
       }
-    });
-
-    let swipePath = [];
-
-    alphabetKeyboard.addEventListener('mousedown', (e) => {
-      isSwiping = true;
-      justSwiped = false;
-      swipePath = [];
-      const key = e.target.closest('.key');
-      if (key && !key.id) {
-        swipePath.push(key.innerText);
-        key.classList.add('active');
-      }
-    });
-
-    alphabetKeyboard.addEventListener('mousemove', (e) => {
-      if (!isSwiping) return;
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      const key = el?.closest('.key');
-      if (key && !key.classList.contains('active') && !key.id) {
-        swipePath.push(key.innerText);
-        key.classList.add('active');
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (swipePath.length > 0) {
-        previewInput.value += swipePath.join('');
-        justSwiped = true;
-      }
-      document.querySelectorAll('.key.active').forEach(k => k.classList.remove('active'));
-      isSwiping = false;
-      swipePath = [];
-      setTimeout(() => { justSwiped = false }, 200);
     });
 
     let gesturePath = [];
@@ -310,7 +257,6 @@
         return;
       }
       lastTap = now;
-
       isDrawing = true;
       gesturePath = [{ x: e.clientX, y: e.clientY }];
       drawDot(e.clientX, e.clientY);
@@ -351,6 +297,62 @@
       gestureArea.appendChild(dot);
       setTimeout(() => dot.remove(), 1000);
     }
+
+    let isSwiping = false;
+    let justSwiped = false;
+    let swipePath = [];
+
+    alphabetKeyboard.addEventListener('mousedown', (e) => {
+      isSwiping = true;
+      justSwiped = false;
+      swipePath = [];
+      const key = e.target.closest('.key');
+      if (key && !key.id) {
+        swipePath.push(key.innerText);
+        key.classList.add('active');
+      }
+    });
+
+    alphabetKeyboard.addEventListener('mousemove', (e) => {
+      if (!isSwiping) return;
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const key = el?.closest('.key');
+      if (key && !key.classList.contains('active') && !key.id) {
+        swipePath.push(key.innerText);
+        key.classList.add('active');
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (swipePath.length > 0) {
+        previewInput.value += swipePath.join('');
+        justSwiped = true;
+      }
+      document.querySelectorAll('.key.active').forEach(k => k.classList.remove('active'));
+      isSwiping = false;
+      swipePath = [];
+      setTimeout(() => { justSwiped = false }, 200);
+    });
+
+    document.querySelectorAll('.key').forEach(key => {
+      key.addEventListener('click', () => {
+        if (justSwiped) return;
+        const keyText = key.innerText;
+        if (key.id === 'backspace') {
+          previewInput.value = previewInput.value.slice(0, -1);
+        } else if (key.id === 'spacebar') {
+          previewInput.value += ' ';
+        } else if (key.id === 'returnKey') {
+          const cursorPos = previewInput.selectionStart;
+          const value = previewInput.value;
+          previewInput.value = value.substring(0, cursorPos) + "\n" + value.substring(cursorPos);
+          previewInput.focus();
+          previewInput.selectionEnd = cursorPos + 1;
+        } else if (!key.id) {
+          previewInput.value += keyText;
+        }
+      });
+    });
   </script>
 </body>
 </html>
