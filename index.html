@@ -1,126 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<title>Gesture-Based Emoji Input</title>
-	<style>
-		body,
-		html {
-			overscroll-behavior: none;
-			/* Prevent pull-to-refresh */
-			touch-action: none;
-			/* Disable touch actions */
-		}
-		body {
-			font-family: Arial, sans-serif;
-			text-align: center;
-			margin: 20px;
-		}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatsApp Style Chat UI</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #ece5dd;
+      margin: 0;
+      padding: 0;
+    }
 
-		.gesture-area {
-			touch-action: none;
-			/* Specifically disable touch actions in the gesture area */
-		}
+    .whatsapp-screen {
+      width: 470px;
+      height: 800px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
 
-		.gesture-area {
-			width: 300px;
-			height: 300px;
-			border: 2px dashed #007bff;
-			margin: 20px auto;
-			line-height: 300px;
-			color: #888;
-			font-size: 20px;
-			position: relative;
-		}
+    .chat-area {
+      flex: 1;
+      background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
 
-		#emojiOutput {
-			width: 80%;
-			margin: 10px auto;
-			padding: 8px;
-			font-size: 20px;
-			border-radius: 8px;
-			display: block;
-		}
-	</style>
+    .chat-bubble {
+      background-color: #dcf8c6;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 70%;
+      align-self: flex-start;
+      margin: 5px 0;
+      white-space: pre-wrap;
+    }
+
+    .keyboard-area {
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+
+    .preview-container {
+      display: flex;
+      position: relative;
+      align-items: center;
+    }
+
+    .preview-input {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      resize: none;
+      box-sizing: border-box;
+      padding-right: 40px;
+      min-height: 40px;
+      max-height: 80px;
+      overflow-y: auto;
+      margin-bottom: 6px;
+    }
+
+    .send-btn {
+      position: absolute;
+      right: 10px;
+      background-color: #25D366;
+      color: white;
+      font-size: 18px;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .gesture-area {
+      width: 100%;
+      height: 80px;
+      background-color: #fff;
+      border: 2px dashed #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .gesture-area span {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background-color: #333;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fadeout 1s ease forwards;
+    }
+
+    @keyframes fadeout {
+      to {
+        opacity: 0;
+        transform: scale(2);
+      }
+    }
+
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .key {
+      width: 32px;
+      height: 40px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin: 2px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .key:active, .key.active {
+      background-color: #cce5ff;
+    }
+
+    .key.space {
+      flex: 1;
+    }
+
+    .key.return {
+      flex: 0.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
-
 <body>
-	<h2>Gesture-Based Emoji Input System</h2>
-	<div class="gesture-area" id="gestureArea">Draw Gesture Here</div>
-	<textarea id="emojiOutput" placeholder="Emoji will appear here..." rows="3"></textarea>
-	<script src="script.js"></script>
+  <div class="whatsapp-screen">
+    <div class="chat-area" id="chatArea"></div>
+
+    <div class="keyboard-area">
+      <div class="preview-container">
+        <textarea class="preview-input" id="previewInput" placeholder="Type a message..."></textarea>
+        <div class="send-btn" id="sendButton">➤</div>
+      </div>
+
+      <div class="gesture-area" id="gestureArea">
+        <span>Draw Gesture Here</span>
+      </div>
+
+      <div id="keyboard-alphabet">
+        <div class="keyboard-row">
+          <div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div><div class="key">T</div><div class="key">Y</div><div class="key">U</div><div class="key">I</div><div class="key">O</div><div class="key">P</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div><div class="key">G</div><div class="key">H</div><div class="key">J</div><div class="key">K</div><div class="key">L</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key">Z</div><div class="key">X</div><div class="key">C</div><div class="key">V</div><div class="key">B</div><div class="key">N</div><div class="key">M</div><div class="key" id="backspace">⌫</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key" id="toggle-symbols">123</div>
+          <div class="key">😀</div>
+          <div class="key space" id="spacebar">Space</div>
+          <div class="key return" id="returnKey">⏎</div>
+        </div>
+      </div>
+
+      <div id="keyboard-symbols" class="hidden">
+        <div class="keyboard-row">
+          <div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div><div class="key">5</div><div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key">0</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key">-</div><div class="key">/</div><div class="key">:</div><div class="key">;</div><div class="key">(</div><div class="key">)</div><div class="key">$</div><div class="key">&</div><div class="key">@</div><div class="key">"</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key">+</div><div class="key">=</div><div class="key">.</div><div class="key">,</div><div class="key">?</div><div class="key">!</div><div class="key">'</div><div class="key" id="backspace2">⌫</div>
+        </div>
+        <div class="keyboard-row">
+          <div class="key" id="toggle-abc">ABC</div>
+          <div class="key">😀</div>
+          <div class="key space" id="spacebar2">Space</div>
+          <div class="key return" id="returnKey2">⏎</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const previewInput = document.getElementById('previewInput');
+    const chatArea = document.getElementById('chatArea');
+    const gestureArea = document.getElementById('gestureArea');
+    const alphabetKeyboard = document.getElementById('keyboard-alphabet');
+    const symbolKeyboard = document.getElementById('keyboard-symbols');
+    const sendButton = document.getElementById('sendButton');
+
+    let isSwiping = false;
+    let justSwiped = false;
+
+    document.querySelectorAll('.key').forEach(key => {
+      key.addEventListener('click', () => {
+        if (justSwiped) return;
+
+        const keyText = key.innerText;
+        if (key.id === 'backspace' || key.id === 'backspace2') {
+          previewInput.value = previewInput.value.slice(0, -1);
+        } else if (key.id === 'spacebar' || key.id === 'spacebar2') {
+          previewInput.value += ' ';
+        } else if (key.id === 'returnKey' || key.id === 'returnKey2') {
+          const cursorPos = previewInput.selectionStart;
+          const value = previewInput.value;
+          previewInput.value = value.substring(0, cursorPos) + "\n" + value.substring(cursorPos);
+          previewInput.focus();
+          previewInput.selectionEnd = cursorPos + 1;
+        } else if (key.id === 'toggle-symbols') {
+          alphabetKeyboard.classList.add('hidden');
+          symbolKeyboard.classList.remove('hidden');
+        } else if (key.id === 'toggle-abc') {
+          symbolKeyboard.classList.add('hidden');
+          alphabetKeyboard.classList.remove('hidden');
+        } else if (!key.id) {
+          previewInput.value += keyText;
+        }
+      });
+    });
+
+    sendButton.addEventListener('click', () => {
+      const msg = previewInput.value.trim();
+      if (msg) {
+        const newBubble = document.createElement('div');
+        newBubble.className = 'chat-bubble';
+        newBubble.innerText = msg;
+        chatArea.appendChild(newBubble);
+        previewInput.value = '';
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+    });
+
+    let swipePath = [];
+
+    alphabetKeyboard.addEventListener('mousedown', (e) => {
+      isSwiping = true;
+      justSwiped = false;
+      swipePath = [];
+      const key = e.target.closest('.key');
+      if (key && !key.id) {
+        swipePath.push(key.innerText);
+        key.classList.add('active');
+      }
+    });
+
+    alphabetKeyboard.addEventListener('mousemove', (e) => {
+      if (!isSwiping) return;
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const key = el?.closest('.key');
+      if (key && !key.classList.contains('active') && !key.id) {
+        swipePath.push(key.innerText);
+        key.classList.add('active');
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (swipePath.length > 0) {
+        previewInput.value += swipePath.join('');
+        justSwiped = true;
+      }
+      document.querySelectorAll('.key.active').forEach(k => k.classList.remove('active'));
+      isSwiping = false;
+      swipePath = [];
+      setTimeout(() => { justSwiped = false }, 200);
+    });
+
+    let gesturePath = [];
+    let isDrawing = false;
+    let lastTap = 0;
+
+    gestureArea.addEventListener('mousedown', startGesture);
+    gestureArea.addEventListener('mousemove', trackGesture);
+    gestureArea.addEventListener('mouseup', endGesture);
+
+    function startGesture(e) {
+      const now = Date.now();
+      if (now - lastTap < 300) {
+        previewInput.value += "👏 ";
+        lastTap = 0;
+        return;
+      }
+      lastTap = now;
+
+      isDrawing = true;
+      gesturePath = [{ x: e.clientX, y: e.clientY }];
+      drawDot(e.clientX, e.clientY);
+    }
+
+    function trackGesture(e) {
+      if (!isDrawing) return;
+      gesturePath.push({ x: e.clientX, y: e.clientY });
+      drawDot(e.clientX, e.clientY);
+    }
+
+    function endGesture() {
+      isDrawing = false;
+      const type = recognizeGesture(gesturePath);
+      const map = {
+        "L-shape": "👍", "circle": "🔁", "zigzag": "😂", "straight-line": "➡️"
+      };
+      previewInput.value += (map[type] || "❓") + " ";
+      gesturePath = [];
+    }
+
+    function recognizeGesture(path) {
+      if (path.length < 5) return "straight-line";
+      const dx = Math.abs(path[path.length - 1].x - path[0].x);
+      const dy = Math.abs(path[path.length - 1].y - path[0].y);
+      if (dx > 50 && dy < 20) return "straight-line";
+      if (dx < 20 && dy > 50) return "L-shape";
+      if (Math.abs(dx - dy) < 20) return "circle";
+      if (dx > 20 && dy > 20) return "zigzag";
+      return "unknown";
+    }
+
+    function drawDot(x, y) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.style.left = `${x - gestureArea.getBoundingClientRect().left}px`;
+      dot.style.top = `${y - gestureArea.getBoundingClientRect().top}px`;
+      gestureArea.appendChild(dot);
+      setTimeout(() => dot.remove(), 1000);
+    }
+  </script>
 </body>
-<script>
-	const gestureArea = document.getElementById("gestureArea");
-	const emojiOutput = document.getElementById("emojiOutput");
-
-	const gestureMap = {
-		"L-shape": "👍",
-		"circle": "🔁",
-		"zigzag": "😂",
-		"straight-line": "➡️"
-	};
-
-	let path = [];
-	let isDrawing = false;
-
-	// Prevent pull-to-refresh on mobile
-	gestureArea.addEventListener("touchstart", preventPullToRefresh);
-	gestureArea.addEventListener("touchmove", preventPullToRefresh);
-
-	function preventPullToRefresh(e) {
-		e.preventDefault();
-	}
-
-	gestureArea.addEventListener("mousedown", startGesture);
-	gestureArea.addEventListener("touchstart", startGesture);
-	gestureArea.addEventListener("mousemove", trackGesture);
-	gestureArea.addEventListener("touchmove", trackGesture);
-	gestureArea.addEventListener("mouseup", endGesture);
-	gestureArea.addEventListener("mouseleave", endGesture);
-	gestureArea.addEventListener("touchend", endGesture);
-
-	function startGesture(e) {
-		isDrawing = true;
-		path = [{ x: getTouchX(e), y: getTouchY(e) }];
-	}
-
-	function trackGesture(e) {
-		if (!isDrawing) return;
-		path.push({ x: getTouchX(e), y: getTouchY(e) });
-	}
-
-	function endGesture() {
-		isDrawing = false;
-		const gestureType = recognizeGesture(path);
-		const emoji = gestureMap[gestureType] || "❓";
-		emojiOutput.value += emoji;
-		path = [];
-	}
-
-	function getTouchX(e) {
-		return e.touches ? e.touches[0].clientX : e.clientX;
-	}
-
-	function getTouchY(e) {
-		return e.touches ? e.touches[0].clientY : e.clientY;
-	}
-
-	function recognizeGesture(path) {
-		if (path.length < 5) return "straight-line";
-
-		const dx = Math.abs(path[path.length - 1].x - path[0].x);
-		const dy = Math.abs(path[path.length - 1].y - path[0].y);
-
-		if (dx > 50 && dy < 20) return "straight-line";
-		if (dx < 20 && dy > 50) return "L-shape";
-		if (Math.abs(dx - dy) < 20) return "circle";
-		if (dx > 20 && dy > 20) return "zigzag";
-
-		return "unknown";
-	}
-
-</script>
-
 </html>
