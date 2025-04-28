@@ -377,35 +377,68 @@
     return new Point(e.clientX - rect.left, e.clientY - rect.top);
   }
 
-  canvas.addEventListener("mousedown", e => {
-    isDrawing = true;
-    points = [getCanvasPoint(e)];
-    ctx.beginPath();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#333";
-    ctx.moveTo(points[0].X, points[0].Y);
-  });
+  
+  // Helper to get the point for both mouse and touch events
+function getCanvasPoint(e) {
+  const rect = canvas.getBoundingClientRect();
+  let clientX, clientY;
 
-  canvas.addEventListener("mousemove", e => {
-    if (!isDrawing) return;
-    const p = getCanvasPoint(e);
-    points.push(p);
-    const prev = points[points.length - 2];
-    if (prev) {
-      ctx.lineTo(p.X, p.Y);
-      ctx.stroke();
-    }
-  });
+  if (e.touches && e.touches.length > 0) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
 
-  canvas.addEventListener("mouseup", () => {
-    isDrawing = false;
-    ctx.closePath();
-    if (points.length > 5) {
-      const result = recognizer.Recognize(points);
-      const emoji = gestureEmojiMap[result.Name] || "❓";
-      previewInput.value += emoji + " ";
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  });
+  return new Point(clientX - rect.left, clientY - rect.top);
+}
+
+// Start drawing
+function startDrawing(e) {
+  e.preventDefault(); // Prevent scrolling on touch
+  isDrawing = true;
+  points = [getCanvasPoint(e)];
+  ctx.beginPath();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "#333";
+  ctx.moveTo(points[0].X, points[0].Y);
+}
+
+// Continue drawing
+function continueDrawing(e) {
+  if (!isDrawing) return;
+  const p = getCanvasPoint(e);
+  points.push(p);
+  const prev = points[points.length - 2];
+  if (prev) {
+    ctx.lineTo(p.X, p.Y);
+    ctx.stroke();
+  }
+}
+
+// End drawing
+function endDrawing() {
+  if (!isDrawing) return;
+  isDrawing = false;
+  ctx.closePath();
+  if (points.length > 5) {
+    const result = recognizer.Recognize(points);
+    const emoji = gestureEmojiMap[result.Name] || "❓";
+    previewInput.value += emoji + " ";
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Mouse Events
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mousemove", continueDrawing);
+canvas.addEventListener("mouseup", endDrawing);
+
+// Touch Events
+canvas.addEventListener("touchstart", startDrawing);
+canvas.addEventListener("touchmove", continueDrawing);
+canvas.addEventListener("touchend", endDrawing);
+
 </script>
   </div>
