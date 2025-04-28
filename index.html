@@ -418,18 +418,25 @@
 
       const gestureEmojiMap = {
         "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
-        "heart": "❤️", "triangle": "⚠️", "square": "📦", "spiral": "🔄",
+        "heart": "❤️", "triangle": "⚠️", "square": "❤️", "spiral": "❤️",
         "question": "❓", "wave": "👋"
       };
 
       // Add predefined gestures
       recognizer.AddGesture("smile", [new Point(100, 100), new Point(120, 120), new Point(140, 100)]);
       recognizer.AddGesture("heart", [new Point(100, 150), new Point(90, 130), new Point(85, 120), new Point(90, 110), new Point(105, 115), new Point(120, 110), new Point(125, 120), new Point(115, 130), new Point(100, 150)]);
+      recognizer.AddGesture("heart", [new Point(100, 150), new Point(90, 130), new Point(80, 120), new Point(90, 110), new Point(100, 115), new Point(110, 110), new Point(120, 120), new Point(110, 130), new Point(100, 150)]);
+      recognizer.AddGesture("heart", [new Point(100, 100), new Point(120, 140), new Point(140, 100)]);
+      recognizer.AddGesture("heart", [new Point(100, 150), new Point(85, 125), new Point(95, 105), new Point(110, 110), new Point(125, 105), new Point(135, 125), new Point(120, 150), new Point(100, 150)]);
+      recognizer.AddGesture("heart", [new Point(100, 150), new Point(90, 130), new Point(85, 120), new Point(90, 110), new Point(105, 115), new Point(120, 110), new Point(125, 120), new Point(115, 130), new Point(100, 150)]);
+      recognizer.AddGesture("heart", [new Point(100, 100), new Point(110, 120), new Point(120, 100)]);
+
+
       recognizer.AddGesture("sad", [new Point(100, 150), new Point(120, 130), new Point(140, 150)]);
       recognizer.AddGesture("check", [new Point(80, 150), new Point(100, 170), new Point(140, 120)]);
       recognizer.AddGesture("x", [new Point(100, 100), new Point(150, 150), new Point(100, 150), new Point(150, 100)]);
       recognizer.AddGesture("arrow", [new Point(80, 100), new Point(140, 100), new Point(130, 90), new Point(140, 100), new Point(130, 110)]);
-      recognizer.AddGesture("triangle", [new Point(100, 150), new Point(150, 50), new Point(200, 150), new Point(100, 150)]);
+      // recognizer.AddGesture("triangle", [new Point(100, 150), new Point(150, 50), new Point(200, 150), new Point(100, 150)]);
       recognizer.AddGesture("square", [new Point(100, 100), new Point(200, 100), new Point(200, 200), new Point(100, 200), new Point(100, 100)]);
       recognizer.AddGesture("spiral", [new Point(150, 150), new Point(160, 140), new Point(170, 150), new Point(160, 160), new Point(150, 155)]);
       recognizer.AddGesture("question", [new Point(100, 80), new Point(110, 70), new Point(120, 80), new Point(115, 100), new Point(110, 110), new Point(110, 130), new Point(110, 135)]);
