@@ -107,7 +107,6 @@
       justify-content: center;
       margin-bottom: 10px;
       position: relative;
-      touch-action: none;
     }
     .gesture-area canvas {
       position: absolute;
@@ -191,7 +190,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="whatsapp-screen">
     <div class="chat-area" id="chatArea"></div>
@@ -343,8 +341,8 @@
   let points = [];
 
   const gestureEmojiMap = {
-    "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "🏃‍➡️",
-    "heart": "❤️", "triangle": "❤️", "square": "🎁", "spiral": "🔄",
+    "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
+    "heart": "❤️", "triangle": "⚠️", "square": "📦", "spiral": "🔄",
     "question": "❓", "wave": "👋"
   };
 
@@ -371,6 +369,7 @@
     canvas.style.height = `${rect.height}px`;
     context.scale(dpr, dpr);
   }
+
   scaleCanvasForHiDPI(canvas, ctx);
 
   function getCanvasPoint(e) {
@@ -387,9 +386,9 @@
     ctx.moveTo(points[0].X, points[0].Y);
   });
 
-  function continueDrawing(x, y) {
+  canvas.addEventListener("mousemove", e => {
     if (!isDrawing) return;
-    const p = new Point(x, y);
+    const p = getCanvasPoint(e);
     points.push(p);
     const prev = points[points.length - 2];
     if (prev) {
@@ -407,37 +406,6 @@
       previewInput.value += emoji + " ";
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  // Mouse events
-  canvas.addEventListener("mousedown", (e) => {
-    const p = getCanvasPoint(e);
-    startDrawing(p.X, p.Y);
   });
-  canvas.addEventListener("mousemove", (e) => {
-    const p = getCanvasPoint(e);
-    continueDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("mouseup", (e) => {
-    endDrawing();
-  });
-
-  // Touch events
-  canvas.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const p = getCanvasPoint(touch);
-    startDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const p = getCanvasPoint(touch);
-    continueDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    endDrawing();
-  });
-  </script>
+</script>
   </div>
