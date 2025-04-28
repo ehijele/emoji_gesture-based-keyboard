@@ -107,7 +107,6 @@
       justify-content: center;
       margin-bottom: 10px;
       position: relative;
-      touch-action: none;
     }
     .gesture-area canvas {
       position: absolute;
@@ -147,44 +146,54 @@
       flex: 0.5;
     }
     .emoji-panel {
-      background: #ffffff; 
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 8px;
-      position: absolute;
-      bottom: 150px;
-      left:500px;
-      right: 500px;
-      max-height: 150px;
-      overflow-y: 50; 
-      z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    .emoji-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      justify-content: flex-start;
-      font-size: 22px;
-    }
-    .emoji-grid span {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .emoji-grid span:hover {
-      background-color: #ffffff;
-    }
+  background: #ffffff; 
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px;
+  position: absolute;
+  bottom: 150px;
+  left:500px;
+  right: 500px;
+  max-height: 150px;
+  overflow-y: 50; 
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.emoji-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-start;
+  font-size: 22px;
+}
+
+.emoji-grid span {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.emoji-grid span:hover {
+  background-color: #ffffff;
+}
+
     .hidden {
       display: none;
     }
+
+    .preview-input:empty:before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none;
+}
+
   </style>
 </head>
-
 <body>
   <div class="whatsapp-screen">
     <div class="chat-area" id="chatArea"></div>
@@ -200,7 +209,8 @@
 
     <div class="keyboard-area">
       <div class="preview-container">
-        <textarea class="preview-input" id="previewInput" placeholder="Type a message ..." readonly></textarea>
+        <div class="preview-input" id="previewInput" contenteditable="true" data-placeholder="Type a message ..."></div>
+
         <div class="send-btn" id="sendButton">➤</div>
       </div>
 
@@ -254,8 +264,7 @@
       </div>
     </div>
 
-<script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
-
+    <script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
 <script>
   const previewInput = document.getElementById('previewInput');
   const sendButton = document.getElementById('sendButton');
@@ -271,14 +280,14 @@
 
   // Send message
   sendButton.addEventListener('click', () => {
-    const msg = previewInput.value.trim();
+    const msg = previewInput.innerText.trim();
     if (msg) {
       const bubble = document.createElement('div');
       bubble.className = 'chat-bubble sent';
       const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       bubble.innerHTML = `<span class="message-content">${msg}</span><div class="message-meta">${time} ✔✔</div>`;
       chatArea.appendChild(bubble);
-      previewInput.value = '';
+      previewInput.innerText = '';
       chatArea.scrollTop = chatArea.scrollHeight;
     }
   });
@@ -325,6 +334,7 @@
       });
     });
   }
+
   handleKeyInput('#keyboard-alphabet .key');
   handleKeyInput('#keyboard-symbols .key');
 
@@ -336,8 +346,8 @@
   let points = [];
 
   const gestureEmojiMap = {
-    "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "🏃‍➡️",
-    "heart": "❤️", "triangle": "❤️", "square": "🎁", "spiral": "🔄",
+    "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
+    "heart": "❤️", "triangle": "💎", "square": "📦", "spiral": "🔄",
     "question": "❓", "wave": "👋"
   };
 
@@ -364,6 +374,7 @@
     canvas.style.height = `${rect.height}px`;
     context.scale(dpr, dpr);
   }
+
   scaleCanvasForHiDPI(canvas, ctx);
 
   function getCanvasPoint(e) {
@@ -371,28 +382,27 @@
     return new Point(e.clientX - rect.left, e.clientY - rect.top);
   }
 
-  // Updated Mobile + Desktop gesture handling
-  function startDrawing(x, y) {
+  canvas.addEventListener("mousedown", e => {
     isDrawing = true;
-    points = [new Point(x, y)];
+    points = [getCanvasPoint(e)];
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.strokeStyle = "#333";
-    ctx.moveTo(x, y);
-  }
+    ctx.moveTo(points[0].X, points[0].Y);
+  });
 
-  function continueDrawing(x, y) {
+  canvas.addEventListener("mousemove", e => {
     if (!isDrawing) return;
-    const p = new Point(x, y);
+    const p = getCanvasPoint(e);
     points.push(p);
     const prev = points[points.length - 2];
     if (prev) {
       ctx.lineTo(p.X, p.Y);
       ctx.stroke();
     }
-  }
+  });
 
-  function endDrawing() {
+  canvas.addEventListener("mouseup", () => {
     isDrawing = false;
     ctx.closePath();
     if (points.length > 5) {
@@ -401,37 +411,13 @@
       previewInput.value += emoji + " ";
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  // Mouse events
-  canvas.addEventListener("mousedown", (e) => {
-    const p = getCanvasPoint(e);
-    startDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("mousemove", (e) => {
-    const p = getCanvasPoint(e);
-    continueDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("mouseup", (e) => {
-    endDrawing();
   });
 
-  // Touch events
-  canvas.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const p = getCanvasPoint(touch);
-    startDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const p = getCanvasPoint(touch);
-    continueDrawing(p.X, p.Y);
-  });
-  canvas.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    endDrawing();
-  });
-  </script>
+  previewInput.addEventListener('touchstart', e => {
+  e.preventDefault(); 
+  previewInput.focus(); 
+});
+
+</script>
+
   </div>
