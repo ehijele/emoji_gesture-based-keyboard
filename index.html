@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhatsApp Chat UI with Gesture Emoji</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
       background-color: #ece5dd;
@@ -16,6 +20,7 @@
       align-items: center;
       min-height: 100dvh;
     }
+
     .whatsapp-screen {
       width: 100%;
       max-width: 480px;
@@ -23,10 +28,11 @@
       border-radius: 20px;
       overflow: hidden;
       background-color: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
     }
+
     .chat-area {
       flex: 1;
       background-image: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
@@ -35,6 +41,7 @@
       flex-direction: column;
       overflow-y: auto;
     }
+
     .chat-bubble {
       padding: 10px 12px 18px;
       border-radius: 10px;
@@ -45,15 +52,18 @@
       color: white;
       word-wrap: break-word;
     }
+
     .sent {
       align-self: flex-end;
       background-color: #075e54;
     }
+
     .message-content {
       display: block;
       padding-right: 50px;
       line-height: 1.4;
     }
+
     .message-meta {
       position: absolute;
       bottom: 4px;
@@ -61,16 +71,19 @@
       font-size: 11px;
       color: #a9c8d0;
     }
+
     .keyboard-area {
       background-color: #f0f0f0;
       padding: 10px;
       border-top: 1px solid #ccc;
     }
+
     .preview-container {
       display: flex;
       position: relative;
       align-items: center;
     }
+
     .preview-input {
       flex: 1;
       padding: 8px;
@@ -83,6 +96,7 @@
       overflow-y: auto;
       margin-bottom: 6px;
     }
+
     .send-btn {
       position: absolute;
       right: 10px;
@@ -97,6 +111,7 @@
       align-items: center;
       cursor: pointer;
     }
+
     .gesture-area {
       width: 100%;
       height: 140px;
@@ -108,6 +123,7 @@
       margin-bottom: 10px;
       position: relative;
     }
+
     .gesture-area canvas {
       position: absolute;
       width: 100%;
@@ -115,16 +131,19 @@
       top: 0;
       left: 0;
     }
+
     .gesture-area span {
       z-index: 1;
       font-size: 14px;
       color: #888;
     }
+
     .keyboard-row {
       display: flex;
       justify-content: center;
       margin-bottom: 5px;
     }
+
     .key {
       width: 32px;
       height: 40px;
@@ -139,57 +158,59 @@
       cursor: pointer;
       user-select: none;
     }
+
     .key.space {
       flex: 1;
     }
+
     .key.return {
       flex: 0.5;
     }
+
     .emoji-panel {
-  background: #ffffff; 
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 8px;
-  position: absolute;
-  bottom: 150px;
-  left:500px;
-  right: 500px;
-  max-height: 150px;
-  overflow-y: 50; 
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
+      position: absolute;
+      bottom: 120px;
+      max-width: 480px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      z-index: 999;
+    }
 
-.emoji-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  justify-content: flex-start;
-  font-size: 22px;
-}
 
-.emoji-grid span {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 6px;
-}
-.gesture-area {
-  touch-action: none; 
-}
+    .emoji-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-start;
+      font-size: 22px;
+    }
 
-.emoji-grid span:hover {
-  background-color: #ffffff;
-}
+    .emoji-grid span {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .gesture-area {
+      touch-action: none;
+    }
+
+    .emoji-grid span:hover {
+      background-color: #ffffff;
+    }
 
     .hidden {
       display: none;
     }
   </style>
 </head>
+
 <body>
   <div class="whatsapp-screen">
     <div class="chat-area" id="chatArea"></div>
@@ -217,16 +238,37 @@
       <!-- Keyboard Alphabet -->
       <div id="keyboard-alphabet">
         <div class="keyboard-row">
-          <div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div><div class="key">T</div>
-          <div class="key">Y</div><div class="key">U</div><div class="key">I</div><div class="key">O</div><div class="key">P</div>
+          <div class="key">Q</div>
+          <div class="key">W</div>
+          <div class="key">E</div>
+          <div class="key">R</div>
+          <div class="key">T</div>
+          <div class="key">Y</div>
+          <div class="key">U</div>
+          <div class="key">I</div>
+          <div class="key">O</div>
+          <div class="key">P</div>
         </div>
         <div class="keyboard-row">
-          <div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div><div class="key">G</div>
-          <div class="key">H</div><div class="key">J</div><div class="key">K</div><div class="key">L</div>
+          <div class="key">A</div>
+          <div class="key">S</div>
+          <div class="key">D</div>
+          <div class="key">F</div>
+          <div class="key">G</div>
+          <div class="key">H</div>
+          <div class="key">J</div>
+          <div class="key">K</div>
+          <div class="key">L</div>
         </div>
         <div class="keyboard-row">
-          <div class="key">Z</div><div class="key">X</div><div class="key">C</div><div class="key">V</div><div class="key">B</div>
-          <div class="key">N</div><div class="key">M</div><div class="key" id="backspace">⌫</div>
+          <div class="key">Z</div>
+          <div class="key">X</div>
+          <div class="key">C</div>
+          <div class="key">V</div>
+          <div class="key">B</div>
+          <div class="key">N</div>
+          <div class="key">M</div>
+          <div class="key" id="backspace">⌫</div>
         </div>
         <div class="keyboard-row">
           <div class="key" id="toggleSymbols">123</div>
@@ -239,16 +281,38 @@
       <!-- Keyboard Symbols -->
       <div id="keyboard-symbols" class="hidden">
         <div class="keyboard-row">
-          <div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div><div class="key">5</div>
-          <div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key">0</div>
+          <div class="key">1</div>
+          <div class="key">2</div>
+          <div class="key">3</div>
+          <div class="key">4</div>
+          <div class="key">5</div>
+          <div class="key">6</div>
+          <div class="key">7</div>
+          <div class="key">8</div>
+          <div class="key">9</div>
+          <div class="key">0</div>
         </div>
         <div class="keyboard-row">
-          <div class="key">@</div><div class="key">#</div><div class="key">$</div><div class="key">%</div><div class="key">&</div>
-          <div class="key">*</div><div class="key">-</div><div class="key">+</div><div class="key">=</div>
+          <div class="key">@</div>
+          <div class="key">#</div>
+          <div class="key">$</div>
+          <div class="key">%</div>
+          <div class="key">&</div>
+          <div class="key">*</div>
+          <div class="key">-</div>
+          <div class="key">+</div>
+          <div class="key">=</div>
         </div>
         <div class="keyboard-row">
-          <div class="key">!</div><div class="key">?</div><div class="key">(</div><div class="key">)</div><div class="key">"</div>
-          <div class="key">'</div><div class="key">:</div><div class="key">;</div><div class="key" id="backspace-symbols">⌫</div>
+          <div class="key">!</div>
+          <div class="key">?</div>
+          <div class="key">(</div>
+          <div class="key">)</div>
+          <div class="key">"</div>
+          <div class="key">'</div>
+          <div class="key">:</div>
+          <div class="key">;</div>
+          <div class="key" id="backspace-symbols">⌫</div>
         </div>
         <div class="keyboard-row">
           <div class="key" id="toggleAlphabet">ABC</div>
@@ -260,197 +324,197 @@
     </div>
 
     <script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
-<script>
-  const previewInput = document.getElementById('previewInput');
-  const sendButton = document.getElementById('sendButton');
-  const chatArea = document.getElementById('chatArea');
-  const emojiPanel = document.getElementById('emojiPanel');
-  const emojiToggle = document.getElementById('emojiToggle');
-  const emojiToggleSymbols = document.getElementById('emojiToggleSymbols');
+    <script>
+      const previewInput = document.getElementById('previewInput');
+      const sendButton = document.getElementById('sendButton');
+      const chatArea = document.getElementById('chatArea');
+      const emojiPanel = document.getElementById('emojiPanel');
+      const emojiToggle = document.getElementById('emojiToggle');
+      const emojiToggleSymbols = document.getElementById('emojiToggleSymbols');
 
-  const keyboardAlphabet = document.getElementById('keyboard-alphabet');
-  const keyboardSymbols = document.getElementById('keyboard-symbols');
-  const toggleSymbols = document.getElementById('toggleSymbols');
-  const toggleAlphabet = document.getElementById('toggleAlphabet');
+      const keyboardAlphabet = document.getElementById('keyboard-alphabet');
+      const keyboardSymbols = document.getElementById('keyboard-symbols');
+      const toggleSymbols = document.getElementById('toggleSymbols');
+      const toggleAlphabet = document.getElementById('toggleAlphabet');
 
-  // Send message
-  sendButton.addEventListener('click', () => {
-    const msg = previewInput.value.trim();
-    if (msg) {
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble sent';
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      bubble.innerHTML = `<span class="message-content">${msg}</span><div class="message-meta">${time} ✔✔</div>`;
-      chatArea.appendChild(bubble);
-      previewInput.value = '';
-      chatArea.scrollTop = chatArea.scrollHeight;
-    }
-  });
-
-  // Toggle emoji panel
-  emojiToggle.addEventListener('click', () => {
-  if (emojiPanel.classList.contains('hidden')) {
-    emojiPanel.classList.remove('hidden');  // Show explicitly
-  } else {
-    emojiPanel.classList.add('hidden');     // Hide explicitly
-  }
-
-  // Fix for readonly and mobile focus
-  previewInput.readOnly = false;
-  previewInput.focus();
-  previewInput.readOnly = true;
-});
-
-  emojiToggleSymbols.addEventListener('click', () => emojiPanel.classList.toggle('hidden'));
-
-  // Emoji click insert
-  emojiPanel.addEventListener('click', (e) => {
-    if (e.target.tagName === 'SPAN') {
-      previewInput.value += e.target.textContent;
-      emojiPanel.classList.add('hidden');
-      previewInput.focus();
-    }
-  });
-
-  // Toggle keyboard layouts
-  toggleSymbols.addEventListener('click', () => {
-    keyboardAlphabet.classList.add('hidden');
-    keyboardSymbols.classList.remove('hidden');
-  });
-
-  toggleAlphabet.addEventListener('click', () => {
-    keyboardSymbols.classList.add('hidden');
-    keyboardAlphabet.classList.remove('hidden');
-  });
-
-  // Handle keyboard input
-  function handleKeyInput(selector) {
-    document.querySelectorAll(selector).forEach(key => {
-      key.addEventListener('click', () => {
-        const value = key.textContent;
-        if (key.id.includes('backspace')) {
-          previewInput.value = previewInput.value.slice(0, -1);
-        } else if (key.id.includes('spacebar')) {
-          previewInput.value += ' ';
-        } else if (key.id.includes('returnKey')) {
-          previewInput.value += '\n';
-        } else if (!key.id.includes('emoji') && !key.id.includes('toggle')) {
-          previewInput.value += value;
+      // Send message
+      sendButton.addEventListener('click', () => {
+        const msg = previewInput.value.trim();
+        if (msg) {
+          const bubble = document.createElement('div');
+          bubble.className = 'chat-bubble sent';
+          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          bubble.innerHTML = `<span class="message-content">${msg}</span><div class="message-meta">${time} ✔✔</div>`;
+          chatArea.appendChild(bubble);
+          previewInput.value = '';
+          chatArea.scrollTop = chatArea.scrollHeight;
         }
-        previewInput.focus();
       });
-    });
-  }
 
-  handleKeyInput('#keyboard-alphabet .key');
-  handleKeyInput('#keyboard-symbols .key');
+      // Toggle emoji panel
+      emojiToggle.addEventListener('click', () => {
+        if (emojiPanel.classList.contains('hidden')) {
+          emojiPanel.classList.remove('hidden');  // Show explicitly
+        } else {
+          emojiPanel.classList.add('hidden');     // Hide explicitly
+        }
 
-  // Gesture canvas setup
-  const canvas = document.getElementById("gestureCanvas");
-  const ctx = canvas.getContext("2d");
-  const recognizer = new DollarRecognizer();
-  let isDrawing = false;
-  let points = [];
+        // Fix for readonly and mobile focus
+        previewInput.readOnly = false;
+        previewInput.focus();
+        previewInput.readOnly = true;
+      });
 
-  const gestureEmojiMap = {
-    "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
-    "heart": "❤️", "triangle": "⚠️", "square": "📦", "spiral": "🔄",
-    "question": "❓", "wave": "👋"
-  };
+      emojiToggleSymbols.addEventListener('click', () => emojiPanel.classList.toggle('hidden'));
 
-  // Add predefined gestures
-  recognizer.AddGesture("smile", [new Point(100,100),new Point(120,120),new Point(140,100)]);
-  recognizer.AddGesture("heart", [new Point(100,150),new Point(90,130),new Point(85,120),new Point(90,110),new Point(105,115),new Point(120,110),new Point(125,120),new Point(115,130),new Point(100,150)]);
-  recognizer.AddGesture("sad", [new Point(100,150), new Point(120,130), new Point(140,150)]);
-  recognizer.AddGesture("check", [new Point(80,150), new Point(100,170), new Point(140,120)]);
-  recognizer.AddGesture("x", [new Point(100,100), new Point(150,150), new Point(100,150), new Point(150,100)]);
-  recognizer.AddGesture("arrow", [new Point(80,100), new Point(140,100), new Point(130,90), new Point(140,100), new Point(130,110)]);
-  recognizer.AddGesture("triangle", [new Point(100,150), new Point(150,50), new Point(200,150), new Point(100,150)]);
-  recognizer.AddGesture("square", [new Point(100,100), new Point(200,100), new Point(200,200), new Point(100,200), new Point(100,100)]);
-  recognizer.AddGesture("spiral", [new Point(150,150), new Point(160,140), new Point(170,150), new Point(160,160), new Point(150,155)]);
-  recognizer.AddGesture("question", [new Point(100,80), new Point(110,70), new Point(120,80), new Point(115,100), new Point(110,110), new Point(110,130), new Point(110,135)]);
-  recognizer.AddGesture("wave", [new Point(100,100), new Point(120,90), new Point(140,110), new Point(160,90), new Point(180,110)]);
+      // Emoji click insert
+      emojiPanel.addEventListener('click', (e) => {
+        if (e.target.tagName === 'SPAN') {
+          previewInput.value += e.target.textContent;
+          emojiPanel.classList.add('hidden');
+          previewInput.focus();
+        }
+      });
 
-  // HiDPI scaling
-  function scaleCanvasForHiDPI(canvas, context) {
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
-    context.scale(dpr, dpr);
-  }
+      // Toggle keyboard layouts
+      toggleSymbols.addEventListener('click', () => {
+        keyboardAlphabet.classList.add('hidden');
+        keyboardSymbols.classList.remove('hidden');
+      });
 
-  scaleCanvasForHiDPI(canvas, ctx);
+      toggleAlphabet.addEventListener('click', () => {
+        keyboardSymbols.classList.add('hidden');
+        keyboardAlphabet.classList.remove('hidden');
+      });
 
-  function getCanvasPoint(e) {
-    const rect = canvas.getBoundingClientRect();
-    return new Point(e.clientX - rect.left, e.clientY - rect.top);
-  }
+      // Handle keyboard input
+      function handleKeyInput(selector) {
+        document.querySelectorAll(selector).forEach(key => {
+          key.addEventListener('click', () => {
+            const value = key.textContent;
+            if (key.id.includes('backspace')) {
+              previewInput.value = previewInput.value.slice(0, -1);
+            } else if (key.id.includes('spacebar')) {
+              previewInput.value += ' ';
+            } else if (key.id.includes('returnKey')) {
+              previewInput.value += '\n';
+            } else if (!key.id.includes('emoji') && !key.id.includes('toggle')) {
+              previewInput.value += value;
+            }
+            previewInput.focus();
+          });
+        });
+      }
 
-  
-  // Helper to get the point for both mouse and touch events
-function getCanvasPoint(e) {
-  const rect = canvas.getBoundingClientRect();
-  let clientX, clientY;
+      handleKeyInput('#keyboard-alphabet .key');
+      handleKeyInput('#keyboard-symbols .key');
 
-  if (e.touches && e.touches.length > 0) {
-    clientX = e.touches[0].clientX;
-    clientY = e.touches[0].clientY;
-  } else {
-    clientX = e.clientX;
-    clientY = e.clientY;
-  }
+      // Gesture canvas setup
+      const canvas = document.getElementById("gestureCanvas");
+      const ctx = canvas.getContext("2d");
+      const recognizer = new DollarRecognizer();
+      let isDrawing = false;
+      let points = [];
 
-  return new Point(clientX - rect.left, clientY - rect.top);
-}
+      const gestureEmojiMap = {
+        "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
+        "heart": "❤️", "triangle": "⚠️", "square": "📦", "spiral": "🔄",
+        "question": "❓", "wave": "👋"
+      };
 
-// Start drawing
-function startDrawing(e) {
-  e.preventDefault(); // Prevent scrolling on touch
-  isDrawing = true;
-  points = [getCanvasPoint(e)];
-  ctx.beginPath();
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = "#333";
-  ctx.moveTo(points[0].X, points[0].Y);
-}
+      // Add predefined gestures
+      recognizer.AddGesture("smile", [new Point(100, 100), new Point(120, 120), new Point(140, 100)]);
+      recognizer.AddGesture("heart", [new Point(100, 150), new Point(90, 130), new Point(85, 120), new Point(90, 110), new Point(105, 115), new Point(120, 110), new Point(125, 120), new Point(115, 130), new Point(100, 150)]);
+      recognizer.AddGesture("sad", [new Point(100, 150), new Point(120, 130), new Point(140, 150)]);
+      recognizer.AddGesture("check", [new Point(80, 150), new Point(100, 170), new Point(140, 120)]);
+      recognizer.AddGesture("x", [new Point(100, 100), new Point(150, 150), new Point(100, 150), new Point(150, 100)]);
+      recognizer.AddGesture("arrow", [new Point(80, 100), new Point(140, 100), new Point(130, 90), new Point(140, 100), new Point(130, 110)]);
+      recognizer.AddGesture("triangle", [new Point(100, 150), new Point(150, 50), new Point(200, 150), new Point(100, 150)]);
+      recognizer.AddGesture("square", [new Point(100, 100), new Point(200, 100), new Point(200, 200), new Point(100, 200), new Point(100, 100)]);
+      recognizer.AddGesture("spiral", [new Point(150, 150), new Point(160, 140), new Point(170, 150), new Point(160, 160), new Point(150, 155)]);
+      recognizer.AddGesture("question", [new Point(100, 80), new Point(110, 70), new Point(120, 80), new Point(115, 100), new Point(110, 110), new Point(110, 130), new Point(110, 135)]);
+      recognizer.AddGesture("wave", [new Point(100, 100), new Point(120, 90), new Point(140, 110), new Point(160, 90), new Point(180, 110)]);
 
-// Continue drawing
-function continueDrawing(e) {
-  if (!isDrawing) return;
-  const p = getCanvasPoint(e);
-  points.push(p);
-  const prev = points[points.length - 2];
-  if (prev) {
-    ctx.lineTo(p.X, p.Y);
-    ctx.stroke();
-  }
-}
+      // HiDPI scaling
+      function scaleCanvasForHiDPI(canvas, context) {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        context.scale(dpr, dpr);
+      }
 
-// End drawing
-function endDrawing() {
-  if (!isDrawing) return;
-  isDrawing = false;
-  ctx.closePath();
-  if (points.length > 5) {
-    const result = recognizer.Recognize(points);
-    const emoji = gestureEmojiMap[result.Name] || "❓";
-    previewInput.value += emoji + " ";
-  }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+      scaleCanvasForHiDPI(canvas, ctx);
 
-// Mouse Events
-canvas.addEventListener("mousedown", startDrawing);
-canvas.addEventListener("mousemove", continueDrawing);
-canvas.addEventListener("mouseup", endDrawing);
+      function getCanvasPoint(e) {
+        const rect = canvas.getBoundingClientRect();
+        return new Point(e.clientX - rect.left, e.clientY - rect.top);
+      }
 
-// Touch Events
-canvas.addEventListener("touchstart", startDrawing);
-canvas.addEventListener("touchmove", continueDrawing);
-canvas.addEventListener("touchend", endDrawing);
 
-</script>
+      // Helper to get the point for both mouse and touch events
+      function getCanvasPoint(e) {
+        const rect = canvas.getBoundingClientRect();
+        let clientX, clientY;
+
+        if (e.touches && e.touches.length > 0) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+
+        return new Point(clientX - rect.left, clientY - rect.top);
+      }
+
+      // Start drawing
+      function startDrawing(e) {
+        e.preventDefault(); // Prevent scrolling on touch
+        isDrawing = true;
+        points = [getCanvasPoint(e)];
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#333";
+        ctx.moveTo(points[0].X, points[0].Y);
+      }
+
+      // Continue drawing
+      function continueDrawing(e) {
+        if (!isDrawing) return;
+        const p = getCanvasPoint(e);
+        points.push(p);
+        const prev = points[points.length - 2];
+        if (prev) {
+          ctx.lineTo(p.X, p.Y);
+          ctx.stroke();
+        }
+      }
+
+      // End drawing
+      function endDrawing() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        ctx.closePath();
+        if (points.length > 5) {
+          const result = recognizer.Recognize(points);
+          const emoji = gestureEmojiMap[result.Name] || "❓";
+          previewInput.value += emoji + " ";
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      // Mouse Events
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mousemove", continueDrawing);
+      canvas.addEventListener("mouseup", endDrawing);
+
+      // Touch Events
+      canvas.addEventListener("touchstart", startDrawing);
+      canvas.addEventListener("touchmove", continueDrawing);
+      canvas.addEventListener("touchend", endDrawing);
+
+    </script>
   </div>
