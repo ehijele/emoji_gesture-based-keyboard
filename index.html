@@ -288,7 +288,19 @@
   });
 
   // Toggle emoji panel
-  emojiToggle.addEventListener('click', () => emojiPanel.classList.toggle('hidden'));
+  emojiToggle.addEventListener('click', () => {
+  if (emojiPanel.classList.contains('hidden')) {
+    emojiPanel.classList.remove('hidden');  // Show explicitly
+  } else {
+    emojiPanel.classList.add('hidden');     // Hide explicitly
+  }
+
+  // Fix for readonly and mobile focus
+  previewInput.readOnly = false;
+  previewInput.focus();
+  previewInput.readOnly = true;
+});
+
   emojiToggleSymbols.addEventListener('click', () => emojiPanel.classList.toggle('hidden'));
 
   // Emoji click insert
