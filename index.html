@@ -147,38 +147,45 @@
       flex: 0.5;
     }
     .emoji-panel {
-      background: #ffffff; 
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 8px;
-      position: absolute;
-      bottom: 150px;
-      left:500px;
-      right: 500px;
-      max-height: 150px;
-      overflow-y: 50; 
-      z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    .emoji-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      justify-content: flex-start;
-      font-size: 22px;
-    }
-    .emoji-grid span {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .emoji-grid span:hover {
-      background-color: #ffffff;
-    }
+  background: #ffffff; 
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px;
+  position: absolute;
+  bottom: 150px;
+  left:500px;
+  right: 500px;
+  max-height: 150px;
+  overflow-y: 50; 
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.emoji-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-start;
+  font-size: 22px;
+}
+
+.emoji-grid span {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.gesture-area {
+  touch-action: none; 
+}
+
+.emoji-grid span:hover {
+  background-color: #ffffff;
+}
+
     .hidden {
       display: none;
     }
@@ -254,8 +261,7 @@
       </div>
     </div>
 
-<script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
-
+    <script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
 <script>
   const previewInput = document.getElementById('previewInput');
   const sendButton = document.getElementById('sendButton');
@@ -325,6 +331,7 @@
       });
     });
   }
+
   handleKeyInput('#keyboard-alphabet .key');
   handleKeyInput('#keyboard-symbols .key');
 
@@ -371,15 +378,14 @@
     return new Point(e.clientX - rect.left, e.clientY - rect.top);
   }
 
-  // Updated Mobile + Desktop gesture handling
-  function startDrawing(x, y) {
+  canvas.addEventListener("mousedown", e => {
     isDrawing = true;
-    points = [new Point(x, y)];
+    points = [getCanvasPoint(e)];
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.strokeStyle = "#333";
-    ctx.moveTo(x, y);
-  }
+    ctx.moveTo(points[0].X, points[0].Y);
+  });
 
   function continueDrawing(x, y) {
     if (!isDrawing) return;
@@ -390,9 +396,9 @@
       ctx.lineTo(p.X, p.Y);
       ctx.stroke();
     }
-  }
+  });
 
-  function endDrawing() {
+  canvas.addEventListener("mouseup", () => {
     isDrawing = false;
     ctx.closePath();
     if (points.length > 5) {
