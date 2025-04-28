@@ -369,7 +369,6 @@
     canvas.style.height = `${rect.height}px`;
     context.scale(dpr, dpr);
   }
-
   scaleCanvasForHiDPI(canvas, ctx);
 
   function getCanvasPoint(e) {
@@ -377,27 +376,28 @@
     return new Point(e.clientX - rect.left, e.clientY - rect.top);
   }
 
-  canvas.addEventListener("mousedown", e => {
+  // Updated Mobile + Desktop gesture handling
+  function startDrawing(x, y) {
     isDrawing = true;
-    points = [getCanvasPoint(e)];
+    points = [new Point(x, y)];
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.strokeStyle = "#333";
-    ctx.moveTo(points[0].X, points[0].Y);
-  });
+    ctx.moveTo(x, y);
+  }
 
-  canvas.addEventListener("mousemove", e => {
+  function continueDrawing(x, y) {
     if (!isDrawing) return;
-    const p = getCanvasPoint(e);
+    const p = new Point(x, y);
     points.push(p);
     const prev = points[points.length - 2];
     if (prev) {
       ctx.lineTo(p.X, p.Y);
       ctx.stroke();
     }
-  });
+  }
 
-  canvas.addEventListener("mouseup", () => {
+  function endDrawing() {
     isDrawing = false;
     ctx.closePath();
     if (points.length > 5) {
@@ -408,5 +408,3 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 </script>
-
-  </div>
