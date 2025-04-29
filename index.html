@@ -245,6 +245,30 @@
       background-color: #1ebe5d;
       transform: scale(1.05);
     }
+
+    .custom-gesture-panel {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 320px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .emoji-option {
+      font-size: 1.5rem;
+      margin: 4px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -273,6 +297,29 @@
         <span>Draw Gesture Here</span>
         <div id="openCustomGesture" class="add-gesture-btn">➕</div>
       </div>
+
+      <div id="customGesturePanel" class="custom-gesture-panel hidden">
+        <h3>Create New Gesture</h3>
+        <canvas id="customGestureCanvas" width="280" height="200" style="border:1px solid #ccc;"></canvas>
+
+        <div style="margin-top:10px;">
+          <div id="selectedEmoji" style="font-size:2rem; text-align:center; cursor:pointer;">😀</div>
+          <div id="emojiPicker" class="hidden"
+            style="margin-top:10px; max-height:120px; overflow-y:auto; text-align:center;">
+            <span class="emoji-option">😀</span><span class="emoji-option">😃</span><span
+              class="emoji-option">😁</span><span class="emoji-option">😂</span><span class="emoji-option">🤣</span>
+            <span class="emoji-option">😊</span><span class="emoji-option">😍</span><span
+              class="emoji-option">😎</span><span class="emoji-option">😢</span><span class="emoji-option">😡</span>
+            <span class="emoji-option">👍</span><span class="emoji-option">🙏</span><span
+              class="emoji-option">❤️</span><span class="emoji-option">🔥</span>
+          </div>
+        </div>
+
+        <button id="saveCustomGesture" style="margin-top:10px; width:100%; padding:8px;">Save Gesture</button>
+        <button id="closeCustomGesture"
+          style="margin-top:10px; width:100%; padding:8px; background:#eee;">Cancel</button>
+      </div>
+
 
       <!-- <div class="gesture-area">
         <canvas id="gestureCanvas"></canvas>
@@ -366,6 +413,7 @@
           <div class="key return" id="returnKeySymbols">⏎</div>
         </div>
       </div>
+
     </div>
 
     <script src="https://depts.washington.edu/acelab/proj/dollar/dollar.js"></script>
@@ -395,6 +443,21 @@
           chatArea.scrollTop = chatArea.scrollHeight;
         }
       });
+
+      
+
+      const openCustomGesture = document.getElementById('openCustomGesture');
+      const closeCustomGesture = document.getElementById('closeCustomGesture');
+      const customGesturePanel = document.getElementById('customGesturePanel');
+
+      openCustomGesture.addEventListener('click', () => {
+        customGesturePanel.classList.remove('hidden');
+      });
+
+      closeCustomGesture.addEventListener('click', () => {
+        customGesturePanel.classList.add('hidden');
+      });
+
 
       // Toggle emoji panel
       emojiToggle.addEventListener('click', () => {
@@ -486,6 +549,8 @@
       recognizer.AddGesture("spiral", [new Point(150, 150), new Point(160, 140), new Point(170, 150), new Point(160, 160), new Point(150, 155)]);
       recognizer.AddGesture("question", [new Point(100, 80), new Point(110, 70), new Point(120, 80), new Point(115, 100), new Point(110, 110), new Point(110, 130), new Point(110, 135)]);
       recognizer.AddGesture("wave", [new Point(100, 100), new Point(120, 90), new Point(140, 110), new Point(160, 90), new Point(180, 110)]);
+
+      
 
       // HiDPI scaling
       function scaleCanvasForHiDPI(canvas, context) {
