@@ -269,6 +269,7 @@
     .hidden {
       display: none;
     }
+    
   </style>
 </head>
 
@@ -295,7 +296,10 @@
       <div class="gesture-area">
         <canvas id="gestureCanvas"></canvas>
         <span>Draw Gesture Here</span>
-        <div id="openCustomGesture" class="add-gesture-btn">➕</div>
+        <div id="openCustomGesture" class="add-gesture-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+          <path d="M19.14,12.94c.04-.31,.06-.63,.06-.94s-.02-.63-.06-.94l2.03-1.58c.18-.14,.23-.4,.12-.61l-1.92-3.32c-.11-.2-.36-.28-.57-.22l-2.39,.96c-.5-.38-1.05-.7-1.66-.94l-.36-2.54c-.03-.22-.22-.39-.44-.39h-3.84c-.22,0-.41,.16-.44,.39l-.36,2.54c-.61,.24-1.17,.56-1.66,.94l-2.39-.96c-.21-.06-.46,.02-.57,.22l-1.92,3.32c-.11,.21-.06,.47,.12,.61l2.03,1.58c-.04,.31-.06,.63-.06,.94s.02,.63,.06,.94l-2.03,1.58c-.18,.14-.23,.4-.12,.61l1.92,3.32c.11,.2,.36,.28,.57,.22l2.39-.96c.5,.38,1.05,.7,1.66,.94l.36,2.54c.03,.22,.22,.39,.44,.39h3.84c.22,0,.41-.16,.44-.39l.36-2.54c.61-.24,1.17-.56,1.66-.94l2.39,.96c.21,.06,.46-.02,.57-.22l1.92-3.32c.11-.21,.06-.47-.12-.61l-2.03-1.58ZM12,15.5c-1.93,0-3.5-1.57-3.5-3.5s1.57-3.5,3.5-3.5,3.5,1.57,3.5,3.5-1.57,3.5-3.5,3.5Z"/>
+        </svg>
+        </div>
       </div>
 
       <div id="customGesturePanel" class="custom-gesture-panel hidden">
@@ -453,26 +457,47 @@
         let reply;
 
         // Simple response logic
-        if (userMsg.includes("hello") || userMsg.includes("hi")) {
+        if (userMsg.includes("hello") || userMsg.includes("hi") || userMsg.includes("👋")) {
           reply = "Hi there! 👋";
-        } else if (userMsg.includes("how are you")) {
+        } else if (userMsg.includes("how are you") || userMsg.includes("😊")) {
           reply = "I'm doing great! Thanks for asking 😊";
-        } else if (userMsg.includes("bye")) {
+        } else if (userMsg.includes("bye") || userMsg.includes("👋")) {
           reply = "Goodbye! See you soon! 👋";
-        } else if (userMsg.includes("thank")) {
+        } else if (userMsg.includes("thank") || userMsg.includes("🙏")) {
           reply = "You're welcome! 🙌";
-        } else if (userMsg.includes("emoji")) {
+        } else if (userMsg.includes("emoji") || userMsg.includes("✍️")) {
           reply = "Try drawing a gesture! ✍️";
-        } else if (userMsg.includes("love")) {
+        } else if (userMsg.includes("love") || userMsg.includes("❤️")) {
           reply = "Love is in the air ❤️";
-        } else if (userMsg.includes("joke")) {
+        } else if (userMsg.includes("joke") || userMsg.includes("😄") || userMsg.includes("🤣")) {
           reply = "Why did the emoji get promoted? Because it was all smiles 😄";
-        } else if (userMsg.includes("who are you")) {
+        } else if (userMsg.includes("who are you") || userMsg.includes("🤖")) {
           reply = "I'm your emoji chat assistant 🤖";
-        } else if (userMsg.includes("weather")) {
+        } else if (userMsg.includes("weather") || userMsg.includes("☁️") || userMsg.includes("🌞")) {
           reply = "It looks emoji-nal today ☁️🌞";
         } else if (userMsg.includes("name")) {
           reply = "You can call me EmoBot 🤖";
+        } else if (userMsg.includes("😢") || userMsg.includes("😭")) {
+          reply = "Oh no, don’t be sad! I’m here for you 💙";
+        } else if (userMsg.includes("🤔")) {
+          reply = "Thinking deep thoughts? I like that! 🤔";
+        } else if (userMsg.includes("👋")) {
+          reply = "Waving right back at you! 👋";
+        } else if (userMsg.includes("🎂") || userMsg.includes("cake")) {
+          reply = "Happy Birthday in advance! 🎉🎂";
+        } else if (userMsg.includes("☁️")) {
+          reply = "Cloudy vibes? Don’t worry, sunshine's coming ☀️";
+        } else if (userMsg.includes("🌚") || userMsg.includes("moon")) {
+          reply = "It’s a beautiful night, isn't it? 🌝";
+        } else if (userMsg.includes("🤝") || userMsg.includes("handshake")) {
+          reply = "Handshake received! Let’s collaborate 🤝";
+        } else if (userMsg.includes("⭐")) {
+          reply = "You’re a star! Keep shining ✨⭐";
+        } else if (userMsg.includes("✅")) {
+          reply = "Check! That looks good ✅";
+        } else if (userMsg.includes("❌")) {
+          reply = "Oops! That looks like a no ❌";
+
         }
         else {
           const randomReplies = [
@@ -603,7 +628,7 @@
       let points = [];
 
       const gestureEmojiMap = {
-        "smile": "⚠️", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
+        "smile": "😁", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
         "heart": "❤️", "triangle": "⚠️", "square": "❤️", "spiral": "❤️",
         "question": "❓", "wave": "👋", "cake": "🎂",
         "moon": "🌚",
