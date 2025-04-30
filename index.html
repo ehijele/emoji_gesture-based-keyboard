@@ -432,8 +432,10 @@
 
       // Send message
       sendButton.addEventListener('click', () => {
+
         const msg = previewInput.value.trim();
         if (msg) {
+          // User's message
           const bubble = document.createElement('div');
           bubble.className = 'chat-bubble sent';
           const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -441,9 +443,85 @@
           chatArea.appendChild(bubble);
           previewInput.value = '';
           chatArea.scrollTop = chatArea.scrollHeight;
+
+          // Trigger bot reply after short delay
+          setTimeout(() => botReply(msg.toLowerCase()), 600);
         }
       });
 
+      function botReply(userMsg) {
+        let reply;
+
+        // Simple response logic
+        if (userMsg.includes("hello") || userMsg.includes("hi")) {
+          reply = "Hi there! 👋";
+        } else if (userMsg.includes("how are you")) {
+          reply = "I'm doing great! Thanks for asking 😊";
+        } else if (userMsg.includes("bye")) {
+          reply = "Goodbye! See you soon! 👋";
+        } else if (userMsg.includes("thank")) {
+          reply = "You're welcome! 🙌";
+        } else if (userMsg.includes("emoji")) {
+          reply = "Try drawing a gesture! ✍️";
+        } else if (userMsg.includes("love")) {
+          reply = "Love is in the air ❤️";
+        } else if (userMsg.includes("joke")) {
+          reply = "Why did the emoji get promoted? Because it was all smiles 😄";
+        } else if (userMsg.includes("who are you")) {
+          reply = "I'm your emoji chat assistant 🤖";
+        } else if (userMsg.includes("weather")) {
+          reply = "It looks emoji-nal today ☁️🌞";
+        } else if (userMsg.includes("name")) {
+          reply = "You can call me EmoBot 🤖";
+        }
+        else {
+          const randomReplies = [
+            "Hmm... can you say that differently?",
+            "Interesting! Tell me more 🤔",
+            "I'm still learning. Try another way!",
+            "That’s a good question!",
+            "Maybe try drawing it as a gesture? 😄",
+            "Oops! I missed that. Could you rephrase it?",
+            "I'm here, but I didn’t quite get that. 😅",
+            "Sounds cool! But I'm not sure how to reply. 🤖",
+            "That's beyond my emoji powers! 🧠",
+            "Did you mean to ask something else?",
+            "Whoa! That went over my head. 😵",
+            "I'm curious too! Let’s look it up together sometime.",
+            "Yikes! I didn’t get that. Wanna try a different way?",
+            "Hmm... That’s something I’m not trained on yet!",
+            "My circuits are confused. 🤯",
+            "Try asking another way!",
+            "Not sure, but it sounds deep. 🧐",
+            "That's out of my emoji dictionary!",
+            "Keep talking, I’m listening! 👂",
+            "Your words are powerful... just mysterious. ✨",
+            "That's above my chat level. 😄",
+            "Maybe the gesture area can help? ✍️",
+            "I wish I could answer that, but I'm still learning!",
+            "You're asking the tough stuff! 🤓",
+            "Try tapping an emoji instead?",
+            "Hmm... that one’s tricky. 🤔",
+            "You might stump even ChatGPT with that! 😆",
+            "Try breaking that down for me?",
+            "Give me another chance to get it right!",
+            "I'm not sure, but I'm excited to learn!"
+          ];
+          reply = randomReplies[Math.floor(Math.random() * randomReplies.length)];
+        }
+
+
+
+        // Bot reply bubble
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+        bubble.style.backgroundColor = '#e1f3fb';
+        bubble.style.color = '#000';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        bubble.innerHTML = `<span class="message-content">${reply}</span><div class="message-meta">${time}</div>`;
+        chatArea.appendChild(bubble);
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
 
 
       const openCustomGesture = document.getElementById('openCustomGesture');
@@ -525,15 +603,14 @@
       let points = [];
 
       const gestureEmojiMap = {
-        "smile": "😊", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
+        "smile": "⚠️", "sad": "😢", "check": "✅", "x": "❌", "arrow": "👉",
         "heart": "❤️", "triangle": "⚠️", "square": "❤️", "spiral": "❤️",
         "question": "❓", "wave": "👋", "cake": "🎂",
         "moon": "🌚",
         "handshake": "🤝",
         "star": "⭐",
         "cloud": "☁️",
-        "openDoor": "🔓",
-        "closeDoor": "🔒"
+
 
 
       };
@@ -561,23 +638,17 @@
 
 
       recognizer.AddGesture("moon", [
-        new Point(150, 150), new Point(170, 140), new Point(190, 150),
-        new Point(200, 170), new Point(190, 190), new Point(170, 200),
-        new Point(150, 190), new Point(140, 170), new Point(150, 150)
-      ]);
+        new Point(150, 150), new Point(170, 140), new Point(190, 150), new Point(200, 170), new Point(190, 190), new Point(170, 200),
+        new Point(150, 190), new Point(140, 170), new Point(150, 150)]);
 
 
       recognizer.AddGesture("handshake", [
-        new Point(150, 100), new Point(130, 110), new Point(150, 130),
-        new Point(130, 150), new Point(150, 170)
-      ]);
+        new Point(150, 100), new Point(130, 110), new Point(150, 130), new Point(130, 150), new Point(150, 170)]);
 
 
       recognizer.AddGesture("star", [
-        new Point(150, 100), new Point(160, 130), new Point(190, 130),
-        new Point(165, 150), new Point(180, 180), new Point(150, 160),
-        new Point(120, 180), new Point(135, 150), new Point(110, 130),
-        new Point(140, 130), new Point(150, 100)
+        new Point(150, 100), new Point(160, 130), new Point(190, 130), new Point(165, 150), new Point(180, 180), new Point(150, 160),
+        new Point(120, 180), new Point(135, 150), new Point(110, 130), new Point(140, 130), new Point(150, 100)
       ]);
 
 
@@ -602,15 +673,6 @@
       recognizer.AddGesture("cake", [
         new Point(120, 150), new Point(230, 120), new Point(250, 230), new Point(140, 250), new Point(120, 150)
       ]);
-
-     
-
-
-
-
-
-
-
 
 
       // HiDPI scaling
@@ -693,6 +755,118 @@
       canvas.addEventListener("touchstart", startDrawing);
       canvas.addEventListener("touchmove", continueDrawing);
       canvas.addEventListener("touchend", endDrawing);
+
+      // Setup for custom gesture drawing
+      const customCanvas = document.getElementById("customGestureCanvas");
+      const customCtx = customCanvas.getContext("2d");
+      let customDrawing = false;
+      let customPoints = [];
+
+      customCanvas.addEventListener("mousedown", (e) => {
+        customDrawing = true;
+        customPoints = [getCanvasPoint(e, customCanvas)];
+        customCtx.beginPath();
+        customCtx.moveTo(customPoints[0].X, customPoints[0].Y);
+      });
+
+      customCanvas.addEventListener("mousemove", (e) => {
+        if (!customDrawing) return;
+        const p = getCanvasPoint(e, customCanvas);
+        customPoints.push(p);
+        customCtx.lineTo(p.X, p.Y);
+        customCtx.stroke();
+      });
+
+      customCanvas.addEventListener("mouseup", () => {
+        customDrawing = false;
+      });
+
+      customCanvas.addEventListener("touchstart", (e) => {
+        customDrawing = true;
+        customPoints = [getCanvasPointForCustom(e, customCanvas)];
+        customCtx.beginPath();
+        customCtx.moveTo(customPoints[0].X, customPoints[0].Y);
+      });
+
+      customCanvas.addEventListener("touchmove", (e) => {
+        if (!customDrawing) return;
+        const p = getCanvasPointForCustom(e, customCanvas);
+        customPoints.push(p);
+        customCtx.lineTo(p.X, p.Y);
+        customCtx.stroke();
+      });
+
+      customCanvas.addEventListener("touchend", () => {
+        customDrawing = false;
+      });
+
+      function getCanvasPointForCustom(e, canvasEl) {
+        const rect = canvasEl.getBoundingClientRect();
+        let x, y;
+        if (e.touches && e.touches.length > 0) {
+          x = e.touches[0].clientX - rect.left;
+          y = e.touches[0].clientY - rect.top;
+        } else {
+          x = e.clientX - rect.left;
+          y = e.clientY - rect.top;
+        }
+        return new Point(x, y);
+      }
+
+      const emojiPicker = document.getElementById("emojiPicker");
+      const selectedEmoji = document.getElementById("selectedEmoji");
+
+      selectedEmoji.addEventListener("click", () => {
+        emojiPicker.classList.toggle("hidden");
+      });
+
+      emojiPicker.addEventListener("click", (e) => {
+        if (e.target.classList.contains("emoji-option")) {
+          selectedEmoji.textContent = e.target.textContent;
+          emojiPicker.classList.add("hidden");
+        }
+      });
+
+      const saveCustomGesture = document.getElementById("saveCustomGesture");
+
+      saveCustomGesture.addEventListener("click", () => {
+        if (customPoints.length < 5) {
+          alert("Please draw a more complete gesture.");
+          return;
+        }
+
+        const emoji = selectedEmoji.textContent;
+        const gestureName = "custom_" + Date.now(); // unique ID
+        recognizer.AddGesture(gestureName, customPoints);
+        gestureEmojiMap[gestureName] = emoji;
+
+        // Clear canvas and hide panel
+        customCtx.clearRect(0, 0, customCanvas.width, customCanvas.height);
+        customPoints = [];
+        customGesturePanel.classList.add("hidden");
+
+        alert(`Gesture saved and mapped to ${emoji}`);
+      });
+
+      // Load saved gestures on startup
+      if (localStorage.customGestures) {
+        const saved = JSON.parse(localStorage.customGestures);
+        for (const item of saved) {
+          recognizer.AddGesture(item.name, item.points.map(p => new Point(p.X, p.Y)));
+          gestureEmojiMap[item.name] = item.emoji;
+        }
+      }
+
+      // Save gestures after each new one is added (inside saveCustomGesture handler)
+      let saved = localStorage.customGestures ? JSON.parse(localStorage.customGestures) : [];
+      saved.push({
+        name: gestureName,
+        emoji: emoji,
+        points: customPoints
+      });
+      localStorage.customGestures = JSON.stringify(saved);
+
+
 
     </script>
   </div>
