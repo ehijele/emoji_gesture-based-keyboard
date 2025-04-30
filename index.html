@@ -201,11 +201,6 @@
       touch-action: none;
     }
 
-    .custom-gesture-panel canvas {
-      touch-action: none;
-    }
-
-
     .emoji-grid span:hover {
       background-color: #ffffff;
     }
@@ -562,8 +557,13 @@
         customGesturePanel.classList.remove('hidden');
       });
 
-      closeCustomGesture.addEventListener('click', () => {
-        customGesturePanel.classList.add('hidden');
+      closeCustomGesture.addEventListener("click", () => {
+        // Clear drawing from canvas
+        customCtx.clearRect(0, 0, customCanvas.width, customCanvas.height);
+        customPoints = [];
+
+        // Hide the panel
+        customGesturePanel.classList.add("hidden");
       });
 
 
