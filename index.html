@@ -274,6 +274,20 @@
     .hidden {
       display: none;
     }
+
+    #toggleCase.active {
+      background-color: #1ebe5d;
+      color: #ffffff;
+    }
+    #toggleCase.active {
+  min-width: 40px;
+
+  #toggleCase {
+  width: 48px;
+  font-weight: bold;
+}
+
+}
   </style>
 </head>
 
@@ -316,12 +330,52 @@
           <div id="selectedEmoji" style="font-size:2rem; text-align:center; cursor:pointer;">😀</div>
           <div id="emojiPicker" class="hidden"
             style="margin-top:10px; max-height:120px; overflow-y:auto; text-align:center;">
-            <span class="emoji-option">😀</span><span class="emoji-option">😃</span><span
-              class="emoji-option">😁</span><span class="emoji-option">😂</span><span class="emoji-option">🤣</span>
-            <span class="emoji-option">😊</span><span class="emoji-option">😍</span><span
-              class="emoji-option">😎</span><span class="emoji-option">😢</span><span class="emoji-option">😡</span>
-            <span class="emoji-option">👍</span><span class="emoji-option">🙏</span><span
-              class="emoji-option">❤️</span><span class="emoji-option">🔥</span>
+            <!-- Smileys & Emotions -->
+            <span class="emoji-option">😀</span><span class="emoji-option">😃</span><span class="emoji-option">😄</span>
+            <span class="emoji-option">😁</span><span class="emoji-option">😆</span><span class="emoji-option">😅</span>
+            <span class="emoji-option">😂</span><span class="emoji-option">🤣</span><span class="emoji-option">😊</span>
+            <span class="emoji-option">😇</span><span class="emoji-option">🙂</span><span class="emoji-option">🙃</span>
+            <span class="emoji-option">😉</span><span class="emoji-option">😍</span><span class="emoji-option">😘</span>
+            <span class="emoji-option">😗</span><span class="emoji-option">😙</span><span class="emoji-option">😚</span>
+            <span class="emoji-option">😋</span><span class="emoji-option">😜</span><span class="emoji-option">😝</span>
+            <span class="emoji-option">😛</span><span class="emoji-option">🤑</span><span class="emoji-option">🤗</span>
+
+            <!-- Emotions & Reactions -->
+            <span class="emoji-option">🤔</span><span class="emoji-option">🤨</span><span class="emoji-option">😐</span>
+            <span class="emoji-option">😑</span><span class="emoji-option">😶</span><span class="emoji-option">🙄</span>
+            <span class="emoji-option">😏</span><span class="emoji-option">😒</span><span class="emoji-option">😞</span>
+            <span class="emoji-option">😔</span><span class="emoji-option">😟</span><span class="emoji-option">😕</span>
+            <span class="emoji-option">😢</span><span class="emoji-option">😭</span><span class="emoji-option">😤</span>
+            <span class="emoji-option">😠</span><span class="emoji-option">😡</span><span class="emoji-option">🤬</span>
+            <span class="emoji-option">🥺</span><span class="emoji-option">😬</span><span class="emoji-option">😱</span>
+
+            <!-- Gestures -->
+            <span class="emoji-option">👍</span><span class="emoji-option">👎</span><span class="emoji-option">✊</span>
+            <span class="emoji-option">🤛</span><span class="emoji-option">🤜</span><span class="emoji-option">👏</span>
+            <span class="emoji-option">🙌</span><span class="emoji-option">👐</span><span class="emoji-option">🙏</span>
+            <span class="emoji-option">👋</span><span class="emoji-option">🤝</span><span class="emoji-option">👌</span>
+
+            <!-- Objects & Symbols -->
+            <span class="emoji-option">❤️</span><span class="emoji-option">💔</span><span class="emoji-option">💕</span>
+            <span class="emoji-option">💖</span><span class="emoji-option">💘</span><span class="emoji-option">💯</span>
+            <span class="emoji-option">💡</span><span class="emoji-option">📢</span><span class="emoji-option">🎉</span>
+            <span class="emoji-option">🎁</span><span class="emoji-option">🔔</span><span class="emoji-option">⚠️</span>
+            <span class="emoji-option">❓</span><span class="emoji-option">✅</span><span class="emoji-option">❌</span>
+
+            <!-- Nature & Food -->
+            <span class="emoji-option">🌞</span><span class="emoji-option">🌝</span><span class="emoji-option">🌚</span>
+            <span class="emoji-option">☁️</span><span class="emoji-option">🌧️</span><span class="emoji-option">⚡</span>
+            <span class="emoji-option">🔥</span><span class="emoji-option">🌈</span><span class="emoji-option">🍕</span>
+            <span class="emoji-option">🍔</span><span class="emoji-option">🍟</span><span class="emoji-option">🎂</span>
+            <span class="emoji-option">🍩</span><span class="emoji-option">🍎</span><span class="emoji-option">🍇</span>
+            <span class="emoji-option">🍌</span><span class="emoji-option">🍉</span><span class="emoji-option">🥑</span>
+
+            <!-- Animals & Random -->
+            <span class="emoji-option">🐶</span><span class="emoji-option">🐱</span><span class="emoji-option">🐭</span>
+            <span class="emoji-option">🐼</span><span class="emoji-option">🐻</span><span class="emoji-option">🐷</span>
+            <span class="emoji-option">🦄</span><span class="emoji-option">🐥</span><span class="emoji-option">🐸</span>
+            <span class="emoji-option">👽</span><span class="emoji-option">🤖</span><span class="emoji-option">💩</span>
+
           </div>
         </div>
 
@@ -367,6 +421,7 @@
           <div class="key">L</div>
         </div>
         <div class="keyboard-row">
+          <div class="key" id="toggleCase">⇧</div>
           <div class="key">Z</div>
           <div class="key">X</div>
           <div class="key">C</div>
@@ -377,6 +432,7 @@
           <div class="key" id="backspace">⌫</div>
         </div>
         <div class="keyboard-row">
+          
           <div class="key" id="toggleSymbols">123</div>
           <div class="key" id="emojiToggle">😀</div>
           <div class="key space" id="spacebar">Space</div>
@@ -421,10 +477,12 @@
           <div class="key" id="backspace-symbols">⌫</div>
         </div>
         <div class="keyboard-row">
+
           <div class="key" id="toggleAlphabet">ABC</div>
           <div class="key" id="emojiToggleSymbols">😀</div>
           <div class="key space" id="spacebarSymbols">Space</div>
           <div class="key return" id="returnKeySymbols">⏎</div>
+
         </div>
       </div>
 
@@ -639,6 +697,20 @@
           });
         });
       }
+
+      const toggleCaseBtn = document.getElementById('toggleCase');
+      let isUppercase = true;
+
+      toggleCaseBtn.addEventListener('click', () => {
+        const keys = document.querySelectorAll('#keyboard-alphabet .key');
+        keys.forEach(key => {
+          if (!key.classList.contains('space') && !key.classList.contains('return') && !key.id.includes("toggle") && !key.id.includes("emoji") && key.textContent.length === 1) {
+            key.textContent = isUppercase ? key.textContent.toLowerCase() : key.textContent.toUpperCase();
+          }
+        });
+        isUppercase = !isUppercase;
+        toggleCaseBtn.classList.toggle('active');
+      });
 
       handleKeyInput('#keyboard-alphabet .key');
       handleKeyInput('#keyboard-symbols .key');
