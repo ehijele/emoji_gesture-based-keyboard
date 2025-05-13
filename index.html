@@ -883,23 +883,26 @@
       let customPoints = [];
 
       customCanvas.addEventListener("mousedown", (e) => {
-        customDrawing = true;
-        customPoints = [getCanvasPoint(e, customCanvas)];
-        customCtx.beginPath();
-        customCtx.moveTo(customPoints[0].X, customPoints[0].Y);
-      });
+  e.preventDefault();
+  customDrawing = true;
+  customPoints = [getCanvasPointForCustom(e, customCanvas)];
+  customCtx.beginPath();
+  customCtx.moveTo(customPoints[0].X, customPoints[0].Y);
+});
 
-      customCanvas.addEventListener("mousemove", (e) => {
-        if (!customDrawing) return;
-        const p = getCanvasPoint(e, customCanvas);
-        customPoints.push(p);
-        customCtx.lineTo(p.X, p.Y);
-        customCtx.stroke();
-      });
 
-      customCanvas.addEventListener("mouseup", () => {
-        customDrawing = false;
-      });
+customCanvas.addEventListener("mousemove", (e) => {
+  if (!customDrawing) return;
+  const p = getCanvasPointForCustom(e, customCanvas);
+  customPoints.push(p);
+  customCtx.lineTo(p.X, p.Y);
+  customCtx.stroke();
+});
+
+
+customCanvas.addEventListener("mouseup", () => {
+  customDrawing = false;
+});
 
       customCanvas.addEventListener("touchstart", (e) => {
         customDrawing = true;
